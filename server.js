@@ -284,7 +284,7 @@ app.get('/delete-account', accountOnly, async function(req, res){
 app.post('/clear-tokens', async function(req, res){
     if (process.env.tokenAuth) {
         if (process.env.tokenAuth == req.headers.tokenAuth) {
-            let collection = await user.find();
+            let collection = await User.find();
             console.log(collection);
             for (let i = 0; i < array.length; i++) {
                 
@@ -326,7 +326,7 @@ async function accountOnly(req, res, next) {
     }
 
     const user = collection[i];
-    console.log(user);
+    // console.log(user);
     // let i = 0;
     // while (i < ) {
         
