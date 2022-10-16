@@ -292,7 +292,8 @@ app.post('/clear-tokens', async function(req, res){
             }
         }
         else {
-            console.log('THERE WAS AN ERROR WHILE TRING TO CLEAR TOKENS.')
+            console.log('req.headers.tokenAuth: ', req.headers.tokenAuth);
+            console.log('THERE WAS AN ERROR WHILE TRING TO CLEAR TOKENS.');
         }
     }
     else {
