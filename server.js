@@ -285,15 +285,26 @@ app.post('/clear-tokens', async function(req, res){
     if (process.env.tokenAuth) {
         if (process.env.tokenAuth == req.headers.tokenauth) {
             let collection = await User.find();
-            console.log(collection);
-            for (let i = 0; i < array.length; i++) {
-                
-                
+            // console.log(collection);
+            for (let i = 0; i < collection.length; i++) {
+                let tokens = collection[i].tokens;
+                for (let j = 0; j < tokens.length; j++) {
+                    const element = tokens[j];
+
+                    let now = Date.now().getTime();
+                    let then = element.date.getTime();
+
+                    if ((now - then) * 1000 * 60 * 60 * 24 > 7) {
+                        await User.findByIdAndDelete(element._id);
+                    }
+                }
             }
+            res.status(200);
         }
         else {
-            console.log('req.headers.tokenAuth: ', req.headers.tokenAuth);
+            // console.log('req.headers.tokenAuth: ', req.headers.tokenAuth);
             console.log('THERE WAS AN ERROR WHILE TRING TO CLEAR TOKENS.');
+            res.status(500);
         }
     }
     else {
