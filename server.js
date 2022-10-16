@@ -27,6 +27,7 @@ app.use(cookieParser());
 const bcrypt = require('bcrypt');
 const crypto = require('crypto');
 const User = require('./models/user');
+const user = require('./models/user');
 
 app.use(express.static(__dirname + '/public'));
 
@@ -43,7 +44,13 @@ app.post('/signin', async function(req, res){
         }
 
         const token = crypto.randomUUID();
-        user.tokens.push(token);
+        // console.log(req.headers.cookie);
+        const tokenObj = {
+            date: Date.now(),
+            userAgent: req.headers['user-agent'],
+            token: token
+        }
+        user.tokens.push(tokenObj);
 
         await user.save();
 
@@ -219,6 +226,80 @@ app.post('/delete-book', accountOnly, async function(req, res){
     // res.redirect('/');
 });
 
+app.post('/edit-book', accountOnly, async function(req, res){
+    const user = req.user;
+
+    // console.log(req.body);
+
+    let pinned = "";
+    if (req.body.eb_pinned) {
+        pinned = true;
+    } else {
+        pinned = false;
+    }
+    
+    let i = 0;
+    while (i < user.books.length-1 && user.books[i]._id != req.body.objectID) {
+        i++;
+    }
+    if (i == user.books.length) {
+        res.send('ERROR');
+        return;
+    }
+
+    user.books[i] = {
+        writer: req.body.eb_writer,
+        title: req.body.eb_title,
+        description: req.body.eb_description,
+        type: req.body.eb_type,
+        publisher: req.body.eb_publisher,
+        yearOfPublication: req.body.eb_yearOfPublication,
+        notes: req.body.eb_notes,
+        house: req.body.eb_house,
+        room: req.body.eb_room,
+        shelf: req.body.eb_shelf,
+        pinned: pinned
+    };
+
+    await user.save();
+
+    res.redirect('/portal');
+});
+
+app.get('/valid-account', accountOnly, function(req, res){
+    let user = req.user;
+    let obj = {
+        valid: true,//im not sure its required
+        user: user
+    }
+    res.type('application/json').send(JSON.stringify(obj));
+});
+
+app.get('/delete-account', accountOnly, async function(req, res){
+    let user = req.user;
+    await User.deleteOne({ username: user.username });
+    res.status(200).redirect('/');
+});
+
+app.post('/clear-tokens', async function(req, res){
+    if (process.env.tokenAuth) {
+        if (process.env.tokenAuth == req.headers.tokenAuth) {
+            let collection = await user.find();
+            console.log(collection);
+            for (let i = 0; i < array.length; i++) {
+                
+                
+            }
+        }
+        else {
+            console.log('THERE WAS AN ERROR WHILE TRING TO CLEAR TOKENS.')
+        }
+    }
+    else {
+        res.send("HMMM");
+    }
+});
+
 async function accountOnly(req, res, next) {
     const token = req.cookies.session;
     if (!token) {
@@ -226,7 +307,31 @@ async function accountOnly(req, res, next) {
         return;
     }
 
-    const user = await User.findOne({tokens: token});
+    let collection = await User.find();
+
+    let i = 0;
+    let noToken = true;
+    while (i < collection.length && noToken) {
+        let tokens = collection[i].tokens;
+        let j = 0;
+        while (j < tokens.length && tokens[j].token != token) {
+            j++;
+        }
+        if (j <tokens.length) {
+            noToken = false;
+        }
+        else {
+            i++;
+        }
+    }
+
+    const user = collection[i];
+    console.log(user);
+    // let i = 0;
+    // while (i < ) {
+        
+    // }
+
     if (user) {
         req.user = user;
         next();

@@ -28,6 +28,7 @@
             padding: 10px;
             margin-bottom: 30px;
             transition: 0.1s;
+            text-align: center;
         }
         p{
             margin: 0px;
@@ -124,12 +125,12 @@
             display: list-item;
             justify-content: space-between;
         }
-        details summary::marker{
+        /* details summary::marker{
             content: '▶';
         }
         details[open] summary::marker{
             content: '▼';
-        }
+        } */
         details:hover{
             background-color: rgba(0, 0, 0, 0.025);
         }
@@ -140,19 +141,27 @@
     <header>
         <h1 id="headerh1"><a href="/" >SHELFIE</a></h1>
         <div>
-            <img class="headerimg" src="/src/img/grid.svg" alt="" onclick="if(this.src.endsWith('/src/img/grid.svg')){ this.src = '/src/img/grid-fill.svg'; document.querySelector('#menu').style.display = 'grid' }else{ this.src = '/src/img/grid.svg'; document.querySelector('#menu').style.display = 'none' }">
+            <img class="headerimg" src="/src/img/grid.svg" alt="" onclick="if(this.src.endsWith('/src/img/grid.svg')){ this.src = '/src/img/grid-fill.svg'; document.querySelector('#menu').style.display = 'flex' }else{ this.src = '/src/img/grid.svg'; document.querySelector('#menu').style.display = 'none' }">
             <div id="menu">
                 <div class="menu-item" onclick="window.location = '/portal/'">
                     <img src="/src/img/box-arrow-bg-45.svg" alt="">
-                    <p>Portal</p>
+                    <p>PORTAL</p>
                 </div>
                 <div class="menu-item" onclick="window.location = '/account/'">
                     <img src="/src/img/person-circle.svg" alt="">
-                    <p>Account</p>
+                    <p>ACCOUNT</p>
                 </div>
                 <div class="menu-item" onclick="window.location = '/features/'">
                     <img src="/src/img/gem.svg" alt="">
-                    <p>Features</p>
+                    <p>FEATURES</p>
+                </div>
+                <div class="menu-item" onclick="window.location = 'https://github.com/kallasz22/shelfie/issues'">
+                    <img src="/src/img/bug.svg" alt="">
+                    <p>Report a bug</p>
+                </div>
+                <div class="menu-item" onclick="window.location = 'https://github.com/kallasz22/shelfie'">
+                    <img src="/src/img/github.svg" alt="">
+                    <p>Github repo</p>
                 </div>
             </div>
         </div>
@@ -181,13 +190,14 @@
     </div>
     <hr>
     <div id="dialog-bg">
+        <!-- adding stuff -->
         <form action="/new-house" method="post" id="new-house">
             <div class="title-grid">
                 <img src="/src/img/house.svg" alt="">
                 <h2>ADD NEW HOUSE</h2>
             </div>
 
-            <label for="nh_name">Name: </label>
+            <label for="nh_name">*Name: </label>
             <input type="text" name="nh_name">
             <label for="nh_description">Description: </label>
             <textarea name="nh_description" id="" cols="30" rows="10"></textarea>
@@ -204,7 +214,7 @@
                 <h2>ADD NEW ROOM</h2>
             </div>
 
-            <label for="nr_name">Name: </label>
+            <label for="nr_name">*Name: </label>
             <input type="text" name="nr_name">
             <label for="nr_description">Description: </label>
             <textarea name="nr_description" id="" cols="30" rows="10"></textarea>
@@ -223,7 +233,7 @@
                 <h2>ADD NEW SHELF</h2>
             </div>
 
-            <label for="ns_name">Name: </label>
+            <label for="ns_name">*Name: </label>
             <input type="text" name="ns_name">
             <label for="ns_description">Description: </label>
             <textarea name="ns_description" id="" cols="30" rows="10"></textarea>
@@ -273,7 +283,46 @@
                 <button type="button" onclick="document.querySelector('#dialog-bg').style.display = 'none'; document.querySelector('#new-book').style.display = 'none';">Cancel</button>
                 <button type="submit" id="nb_add">Add</button>
             </div>
-        </form>        
+        </form>
+
+
+        <!-- editing stuff -->
+        <form action="/edit-book" method="post" id="edit-book">
+            <div class="title-grid">
+                <img src="/src/img/journal-check.svg" alt="">
+                <h2>EDIT BOOK</h2>
+            </div>
+
+            <label for="eb_writer">Writer: </label>
+            <input type="text" name="eb_writer" id="eb_writer">
+            <label for="eb_title">*Title: </label>
+            <input type="text" name="eb_title" id="eb_title">
+            <label for="eb_description">Description: </label>
+            <textarea name="eb_description" id="eb_description" cols="30" rows="10"></textarea>
+            <label for="eb_type">Type: </label>
+            <input type="text" name="eb_type" id="eb_type">
+            <label for="eb_publisher">Publisher: </label>
+            <input type="text" name="eb_publisher" id="eb_publisher">
+            <label for="eb_yearofpublication">Year of publication: </label>
+            <input type="text" name="eb_yearOfPublication" id="eb_yearOfPublication">
+            <label for="eb_notes">Notes: </label>
+            <textarea name="eb_notes" id="eb_notes" cols="30" rows="10"></textarea>
+
+            <label for="eb_house">House: </label>
+            <select name="eb_house" id="eb_house"></select>
+            <label for="eb_room">Room: </label>
+            <select name="eb_room" id="eb_room"></select>
+            <label for="eb_shelf">Shelf: </label>
+            <select name="eb_shelf" id="eb_shelf"></select>
+
+            <label for="eb_pinned">Pinned: <input type="checkbox" name="eb_pinned" id="eb_pinned"></label>
+            
+            <div>
+                <button type="button" onclick="document.querySelector('#dialog-bg').style.display = 'none'; document.querySelector('#edit-book').style.display = 'none';">Cancel</button>
+                <button type="submit" id="eb_edit">Edit</button>
+            </div>
+            <input style="display: none" id="eb_objectID" name="eb_objectID" type="text"></p>
+        </form>
     </div>
 </body>
 </html>

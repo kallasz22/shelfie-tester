@@ -10,7 +10,22 @@ const userSchema = new mongoose.Schema({
         required: true
     },
     tokens: {
-        type: [String]
+        // type: [String]
+        type: [
+            {
+                date: {
+                    type: Date,
+                    required: true
+                },
+                userAgent: {
+                    type: String
+                },
+                token: {
+                    type: String,
+                    required: true
+                }
+            }
+        ]
     },
     books: {
         type: [
@@ -77,11 +92,11 @@ const userSchema = new mongoose.Schema({
                                         },
                                         description: {
                                             type: String,
-                                            required: true
+                                            // required: true
                                         }
                                     }
                                 ],
-                                required: true
+                                // required: true
                             },
                             name: {
                                 type: String,
@@ -89,7 +104,7 @@ const userSchema = new mongoose.Schema({
                             },
                             description: {
                                 type: String,
-                                required: true
+                                // required: true
                             }
                         }
                     ]
@@ -100,7 +115,7 @@ const userSchema = new mongoose.Schema({
                 },
                 description: {
                     type: String,
-                    required: true
+                    // required: true
                 }
             }
         ]
